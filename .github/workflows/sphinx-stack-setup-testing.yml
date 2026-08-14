@@ -89,7 +89,7 @@ jobs:
       release_id: ${{ inputs.release_id || needs.find-dispatch-release.outputs.release_id || needs.find-scheduled-release.outputs.release_id }}
       configuration_source: central
       # Pin this SHA in SecondSkoll/generic-agentic-workflows-config.
-      configuration_ref: 9b35f1fc2860a1d6b8f1abaa9b467dc4eb42aec8
+      configuration_ref: 089e0903a858d73d7c9f67cf8d1faea8ec7ee01e
       configuration_profile: sphinx-stack-setup
       dry_run: true
     secrets:
