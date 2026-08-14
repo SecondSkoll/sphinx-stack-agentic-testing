@@ -1,19 +1,19 @@
 name: Sphinx Stack Setup Release Review (with central configuration)
 
-on:
-  schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
-    inputs:
-      target_repository:
-        description: Canonical owner/repository of the external release to review
-        type: string
-        required: true
-      release_id:
-        description: Optional positive release ID; defaults to the target's latest release
-        type: string
-        required: false
-        default: ''
+# on:
+#   schedule:
+#     - cron: '0 0 * * *'
+#   workflow_dispatch:
+#     inputs:
+#       target_repository:
+#         description: Canonical owner/repository of the external release to review
+#         type: string
+#         required: true
+#       release_id:
+#         description: Optional positive release ID; defaults to the target's latest release
+#         type: string
+#         required: false
+#         default: ''
 
 permissions:
   contents: read

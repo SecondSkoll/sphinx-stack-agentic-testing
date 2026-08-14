@@ -1,4 +1,4 @@
-name: Release project review (self, local configuration)
+name: Sphinx Stack Setup Release Review (with local configuration)
 
 on:
   release:
