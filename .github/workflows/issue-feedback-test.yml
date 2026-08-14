@@ -13,16 +13,15 @@ permissions:
 
 jobs:
   feedback:
-    uses: SecondSkoll/generic-agentic-workflows/.github/workflows/opencode-issue-feedback.yml@4aa41d5f5fd551f89769d9f3f67c0be3c8bf8bde
+    uses: SecondSkoll/generic-agentic-workflows/.github/workflows/opencode-issue-feedback.yml@6418b0c0ccc4100dc1d86b611b18a166b21aefe5
     permissions:
       contents: read
       issues: write
     with:
       configuration_source: default
-      configuration_ref: 4aa41d5f5fd551f89769d9f3f67c0be3c8bf8bde
+      configuration_ref: 6418b0c0ccc4100dc1d86b611b18a166b21aefe5
       configuration_profile: issue-feedback
       focus: general
       max_issues: 20
-      dry_run: true
     secrets:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
