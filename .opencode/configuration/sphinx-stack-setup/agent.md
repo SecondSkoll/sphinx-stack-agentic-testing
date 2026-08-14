@@ -27,14 +27,6 @@ For this profile, the workflow builds the verified release with
 empty. Use the command status, bounded diagnostics, and output check to decide
 whether the released Sphinx Stack can build its shipped documentation.
 
-Any warnings beginning with "WARNING: Error getting data from Git" can be safely
-ignored.
-
-Then, assess how difficult it would be to adopt the Sphinx Stack for your own
-documentation. Examine the configuration that needs to be set for your project,
-the structure of the files, and anything else you would need to do to deploy
-documentation from the calling project with the Sphinx Stack.
-
 ## Boundaries
 
 You are read-only. You do not edit files, run shell commands, contact network

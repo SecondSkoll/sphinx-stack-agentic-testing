@@ -1,18 +1,24 @@
 # Sphinx Stack release project-review profile
 
-Review the published Sphinx Stack release for release-readiness and its ability
-to build the documentation shipped in the release. The workflow checks out the
+Review the published Sphinx Stack release for release-readiness and how easy
+it is to set up for a new project. The workflow checks out the
 verified release commit, runs the release's documented `make -C docs html`
 build, and verifies that the expected `docs/_build/index.html` entry point was
 created. Assess the command result, captured diagnostics, and output-artifact
 check together.
 
-Focus findings on actionable build or release-readiness gaps: dependency or
-environment failures, Sphinx warnings promoted to errors, missing or empty
-HTML output, deployment documentation, ownership, acceptance criteria,
-rollout or rollback planning, operational support, release notes, risk
-decisions, and follow-up ownership. A successful command and output check are
-positive evidence; do not invent a finding when the build passed.
+If the build generates output, some warnings like "git clone too shallow" or
+"error getting data from git" can be ignored, along with the exit code. 
+
+Focus findings on actionable build or release-readiness gaps, as well as likely
+adoption pain points you find by examining the component pieces. Know that there
+is additional supporting documentation you don't have access to - but the Sphinx
+Stack itself should be easy to approach without that documentation. 
+
+Highlight any problems with operational support, release notes, risk
+decisions, and general ownership. A successful command and output check are
+positive evidence; but a failure may not be negative evidence as you have more 
+constraints on you than a normal user. Do not invent a finding when the build passed.
 
 The workflow supplies bounded local preflight results. Treat those results as
 evidence only. If the build or output check fails, identify the relevant
