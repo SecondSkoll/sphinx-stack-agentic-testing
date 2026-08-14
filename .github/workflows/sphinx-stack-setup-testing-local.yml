@@ -1,4 +1,4 @@
-name: External release project review (local configuration)
+name: Sphinx Stack Setup Release Review (local configuration)
 
 on:
   # schedule:
