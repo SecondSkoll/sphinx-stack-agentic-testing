@@ -1,4 +1,4 @@
-name: External release project review (central configuration)
+name: Sphinx Stack Setup Release Review (with central configuration)
 
 on:
   schedule:
@@ -80,7 +80,7 @@ jobs:
       needs.find-scheduled-release.outputs.release_id != ''
       )
     needs: [find-scheduled-release, find-dispatch-release]
-    uses: SecondSkoll/generic-agentic-workflows/.github/workflows/opencode-release-project-review.yml@6418b0c0ccc4100dc1d86b611b18a166b21aefe5
+    uses: SecondSkoll/generic-agentic-workflows/.github/workflows/opencode-release-project-review.yml@68c531db51ee9a5522c3c5da65a96af804195b9c
     permissions:
       contents: read
       issues: write
