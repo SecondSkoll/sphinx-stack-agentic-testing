@@ -1,0 +1,15 @@
+name: sphinx-stack-testing
+base: ubuntu@24.04
+sdks:
+  - name: opencode
+    channel: latest/stable
+  - name: uv
+    channel: latest/stable
+
+actions:
+  opencode: |
+    opencode "$@"
+  adoption-test: |
+    opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-adoption.md
+  upgrade-test: |
+    opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-upgrade.md
