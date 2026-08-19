@@ -22,6 +22,20 @@ defines whether the workflow is direct adoption or a two-stage upgrade.
 3. Preserve existing documentation and behavior unless the selected Stack
    release explicitly requires a change. Record anything that cannot be
    preserved.
+4. The calling prompt may define multiple scenarios. Treat each scenario as an
+   independent migration: capture its starting state, do not carry generated
+   files or configuration into the next scenario, and identify it in every
+   evidence entry.
+
+## Use referenced fixtures safely
+
+When the calling prompt names an OpenCode reference, treat it as read-only and
+record its resolved commit. Inspect its documentation source, configuration,
+assets, navigation, dependency declarations, and build entry point. Reproduce
+only the documentation fixture needed for the scenario in this ephemeral test
+repository; never edit the reference cache or unrelated application code.
+Preserve the fixture's syntax and behavior rather than replacing it with the
+local sample content.
 
 ## Perform the migration
 
@@ -52,7 +66,9 @@ For upgrades, distinguish baseline-adoption friction from upgrade friction.
 
 ## Validate each required state
 
-1. Run `make -C docs html` when the calling prompt requires validation.
+1. Use the existing `make html` entry point before migration when applicable,
+   and `make -C docs html` for a Stack-managed site when the calling prompt
+   requires validation.
 2. Record the command outcome and relevant diagnostics.
 3. Verify that the expected HTML entry point exists and is usable as far as the
    available tools permit. Inspect rendered output when tools permit, but state

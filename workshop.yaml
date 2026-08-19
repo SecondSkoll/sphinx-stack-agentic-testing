@@ -11,7 +11,9 @@ actions:
     opencode "$@"
   adoption-test: |
     sudo apt update && sudo apt install -y make python3.12-venv
+    rm -f agentic-test-report.md
     opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-adoption.md
   upgrade-test: |
     sudo apt update && sudo apt install -y make python3.12-venv
+    rm -f agentic-test-report.md
     opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-upgrade.md

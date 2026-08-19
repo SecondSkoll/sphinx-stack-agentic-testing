@@ -28,8 +28,10 @@
     }
   },
   "references": {
-    "generic-agentic-workflows": "secondskoll/generic-agentic-workflows",
-    "branch": "test/docs",
-    "description": "A test repository with documentation not using the Sphinx Stack, to test adoption."
+    "generic-agentic-workflows": {
+      "repository": "SecondSkoll/generic-agentic-workflows",
+      "branch": "test/docs",
+      "description": "Read-only real-world documentation fixture. Record the resolved commit and use its documentation to repeat adoption and upgrade testing."
+    }
   }
 }

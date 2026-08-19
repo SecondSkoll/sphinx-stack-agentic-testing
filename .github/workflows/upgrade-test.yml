@@ -35,37 +35,65 @@ jobs:
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           exit 0
 
+      - name: Validate concise report
+        id: report
+        if: always()
+        run: |
+          set +e
+          report=agentic-test-report.md
+          valid=true
+          for required in \
+            'sphinx-stack-upgrade-report-v1' \
+            '## Release evidence' \
+            '## Scenario results' \
+            '## Fuzz results' \
+            '## Findings' \
+            '## Repository state' \
+            'local-rst' \
+            'reference-generic-agentic-workflows'; do
+            grep -Fq "$required" "$report" 2>/dev/null || valid=false
+          done
+          outcome=$(sed -n 's/^- \*\*Overall outcome:\*\* \(successful\|partially successful\|blocked\)$/\1/p' "$report" | head -n1)
+          [[ -n "$outcome" ]] || valid=false
+          echo "valid=$valid" >> "$GITHUB_OUTPUT"
+          echo "outcome=${outcome:-blocked}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload complete test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: upgrade-test-evidence
+          path: |
+            agentic-test-report.md
+            upgrade-test-output.txt
+          if-no-files-found: warn
+
       - name: Create results issue
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
           EXIT_CODE: ${{ steps.test.outputs.exit_code }}
+          REPORT_VALID: ${{ steps.report.outputs.valid }}
+          OUTCOME: ${{ steps.report.outputs.outcome }}
         run: |
           set -euo pipefail
-          output_file=upgrade-test-output.txt
-          if [[ ! -f "$output_file" ]]; then
-            printf 'The test did not produce output.\n' > "$output_file"
-          fi
-
-          status="passed"
-          if [[ "${EXIT_CODE:-1}" != "0" ]]; then
+          status="${OUTCOME:-blocked}"
+          if [[ "${EXIT_CODE:-1}" != "0" || "${REPORT_VALID:-false}" != "true" ]]; then
             status="failed"
           fi
 
-          {
-            printf '# Upgrade test results\n\n'
-            printf -- '- **Status:** %s\n' "$status"
-            printf -- '- **Run:** %s/actions/runs/%s\n\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
-            printf '```text\n'
-            tail -c 55000 "$output_file"
-            printf '\n```\n'
-          } > issue-body.md
+          if [[ -f agentic-test-report.md && "${REPORT_VALID:-false}" == "true" ]]; then
+            cp agentic-test-report.md issue-body.md
+          else
+            printf '# Sphinx Stack upgrade test\n\n- **Overall outcome:** blocked\n\nThe agent did not produce a valid `sphinx-stack-upgrade-report-v1` report. See the workflow artifact for the complete transcript.\n' > issue-body.md
+          fi
+          printf '\n---\n[Workflow run and complete evidence artifact](%s/actions/runs/%s)\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" >> issue-body.md
 
           gh issue create \
             --repo "$GITHUB_REPOSITORY" \
             --title "Upgrade test: $status ($(date -u +%Y-%m-%dT%H:%M:%SZ))" \
             --body-file issue-body.md
 
-      - name: Mark workflow as failed when the test fails
-        if: steps.test.outputs.exit_code != '0'
+      - name: Mark workflow as failed when blocked or invalid
+        if: steps.test.outputs.exit_code != '0' || steps.report.outputs.valid != 'true' || steps.report.outputs.outcome == 'blocked'
         run: exit 1

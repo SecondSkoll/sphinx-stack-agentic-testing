@@ -7,6 +7,7 @@ temperature: 0.1
 permission:
   edit: allow
   bash:
+    "make html": allow
     "make -C docs html": allow
     "*": deny
   read: allow
@@ -15,6 +16,8 @@ permission:
     sphinx-stack-guardrails: allow
     sphinx-stack-release-selection: allow
     sphinx-stack-migration-validation: allow
+    sphinx-stack-build-fuzzing: allow
+    sphinx-stack-test-report: allow
 ---
 
 # Sphinx Stack agent
