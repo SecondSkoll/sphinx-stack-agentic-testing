@@ -10,8 +10,8 @@ actions:
   opencode: |
     opencode "$@"
   adoption-test: |
-    sudo apt update && sudo apt install -y make
+    sudo apt update && sudo apt install -y make python3.12-venv
     opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-adoption.md
   upgrade-test: |
-    sudo apt update && sudo apt install -y make
+    sudo apt update && sudo apt install -y make python3.12-venv
     opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-upgrade.md
