@@ -1,0 +1,71 @@
+name: Run adoption test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  adoption-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Workshop
+        run: sudo snap install workshop --classic
+
+      - name: Configure OpenRouter credential
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$OPENROUTER_API_KEY"
+          umask 077
+          printf '%s' "$OPENROUTER_API_KEY" > .key
+
+      - name: Run adoption test
+        id: test
+        run: |
+          set +e
+          workshop run -- adoption-test 2>&1 | tee adoption-test-output.txt
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Create results issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXIT_CODE: ${{ steps.test.outputs.exit_code }}
+        run: |
+          set -euo pipefail
+          output_file=adoption-test-output.txt
+          if [[ ! -f "$output_file" ]]; then
+            printf 'The test did not produce output.\n' > "$output_file"
+          fi
+
+          status="passed"
+          if [[ "${EXIT_CODE:-1}" != "0" ]]; then
+            status="failed"
+          fi
+
+          {
+            printf '# Adoption test results\n\n'
+            printf -- '- **Status:** %s\n' "$status"
+            printf -- '- **Run:** %s/actions/runs/%s\n\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+            printf '```text\n'
+            tail -c 55000 "$output_file"
+            printf '\n```\n'
+          } > issue-body.md
+
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Adoption test: $status ($(date -u +%Y-%m-%dT%H:%M:%SZ))" \
+            --body-file issue-body.md
+
+      - name: Mark workflow as failed when the test fails
+        if: steps.test.outputs.exit_code != '0'
+        run: exit 1
