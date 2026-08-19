@@ -3,3 +3,4 @@ docs/
 .venv/
 .key
 agentic-test-report.md
+.agentic-work/

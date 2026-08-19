@@ -50,6 +50,10 @@ Rules:
 - In Repository state, state what was restored or retained, whether the
   reference remained read-only, and unresolved risks. Use `None` explicitly
   when there are none.
+- For generated standalone fixtures, distinguish immutable input and commit,
+  fixture-owned scaffolding, documentation adaptations, dependency/build
+  state, and cleanup. State whether `.agentic-work/` was absent after cleanup;
+  do not describe deleting a disposable copy as restoring the reference.
 - Keep the report concise: no command transcript, no repeated narrative, and
   no section other than the six required headings.
 

@@ -10,10 +10,15 @@ metadata:
 
 # Fuzz Sphinx builds and evaluate recovery
 
-Run this only after the scenario has a successful migrated build. Keep a copy
-of the working configuration in memory and restore it after every case. Change
-one value per case; do not delete documentation, relax warning policies, or
-make unrelated changes.
+Run this only after the scenario has a successful migrated build. Before
+fuzzing, create a fixture-local byte-for-byte backup of every configuration
+file that may be changed. Restore from that backup and compare the restored
+file after every case. Change one value per case; do not delete documentation,
+relax warning policies, or make unrelated changes.
+
+All mutations, backups, builds, and repairs must remain under the current
+`.agentic-work/<scenario>/` directory. Never fuzz an original repository input
+or a configured reference directory.
 
 ## Required deterministic cases
 

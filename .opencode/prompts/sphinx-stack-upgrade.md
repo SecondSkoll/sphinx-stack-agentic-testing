@@ -29,14 +29,41 @@ Run both scenarios independently against the same selected release pair:
 | ID | Input | Coverage |
 |---|---|---|
 | `local-rst` | This repository's original `source/` documentation and root build configuration | Standalone reStructuredText site |
-| `reference-generic-agentic-workflows` | The documentation fixture exposed by the OpenCode `generic-agentic-workflows` reference | Real-world embedded documentation, including its original syntax, navigation, assets, and surrounding constraints |
+| `reference-generic-agentic-workflows` | Markdown documentation and related assets exposed by the OpenCode `generic-agentic-workflows` reference | Standalone Sphinx Stack fixture generated from a real-world Markdown source corpus |
 
-Treat the reference as read-only. Record its resolved commit and relevant
-documentation root. Reproduce its documentation fixture in this ephemeral
-repository for migration without editing the reference cache or unrelated
-application files. If the reference cannot be resolved or does not contain a
-coherent pre-Stack fixture, mark that scenario `blocked` with evidence; do not
-replace it with invented content.
+Treat the configured reference directory and cache as read-only. Record its
+resolved commit and identify the relevant Markdown documentation and assets. A
+reference is valid input even when it has no Sphinx configuration, Makefile,
+dependency declaration, or explicit Sphinx navigation.
+
+Copy the relevant source corpus into the reference scenario directory while
+preserving its relative layout and source content. Create clearly test-owned
+standalone Sphinx and Sphinx Stack scaffolding around it, including the
+configuration, build entry point, dependencies, source mapping, Markdown
+parser, and navigation adapter needed for a coherent build. A generated index
+or toctree must be derived deterministically from the copied files.
+
+Generating fixture scaffolding and release-required support files is not
+inventing documentation. Do not replace, rewrite, or fabricate the referenced
+content. Adapt embedding-specific links or navigation only when required for a
+standalone build, keep changes minimal, and record the delta. Mark this
+scenario `blocked` only if the reference cannot be resolved, has no usable
+documentation source, or cannot build after bounded fixture-local adaptation.
+The absence of an existing Sphinx project is not a blocker.
+
+## Fixture workspace
+
+Perform both scenarios in disposable, independent directories:
+
+- `.agentic-work/local-rst/`
+- `.agentic-work/reference-generic-agentic-workflows/`
+
+Treat this repository's original `source/`, root `Makefile`, and configured
+reference paths as read-only inputs. Copy the local source and build files into
+the local scenario before testing. Other than `agentic-test-report.md`, do not
+write outside `.agentic-work/`. Install dependencies only in scenario-local
+virtual environments. Never commit, push, tag, mutate a Git remote, or edit a
+reference cache.
 
 ## Workflow per scenario
 
@@ -45,12 +72,17 @@ replace it with invented content.
 	`sphinx-stack-release-selection` once, before either scenario. If no valid
 	previous release exists, stop without modifying the repository. Explain any
 	ordering or stability ambiguity and otherwise use the most defensible pair.
-2. Capture the scenario's clean starting state and pre-migration build evidence
-	where its original build entry point is available. Apply the inspection and
+2. Create the scenario from its read-only inputs. Capture pre-migration build
+	evidence where an original build entry point exists; for a Markdown-only
+	source corpus, record that no original Sphinx build was defined and proceed
+	to construct the older-release standalone fixture. Apply the inspection and
 	preservation procedures from
    `sphinx-stack-migration-validation`.
 3. Adopt and validate the older release as a realistic baseline using material
-   belonging to that release. Preserve the required conceptual checkpoint.
+   belonging to that release. For a source corpus, this constructed fixture is
+   the required baseline. Create minimal fixture-owned support files required
+   by that release and record them; missing original Sphinx configuration is
+   not a baseline failure. Preserve the required conceptual checkpoint.
 4. Before further edits, determine the expected migration steps and then
    upgrade that baseline in place to the latest release.
 5. Validate and compare the latest-release state with the baseline. Check
@@ -60,8 +92,8 @@ replace it with invented content.
 6. After a successful latest-release build, run all bounded cases from
    `sphinx-stack-build-fuzzing`. Restore and confirm the clean latest-release
    build after every case.
-7. Record the scenario result, then restore the repository to its clean
-   pre-test state before starting the next scenario. Never commit or push.
+7. Record the scenario result, remove its complete disposable directory, and
+   verify original inputs remain unchanged before starting the next scenario.
 
 After both scenarios, verify that only `agentic-test-report.md` may remain as a
 test result. If restoration cannot be verified with available tools, say so

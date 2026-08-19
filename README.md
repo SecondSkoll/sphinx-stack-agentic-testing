@@ -10,12 +10,16 @@ This repository contains a workshop file that provides two main actions,
 `adoption-test` and `upgrade-test`. Each action runs two independent scenarios:
 
 * the local standalone reStructuredText fixture;
-* the real-world documentation fixture from the OpenCode
-	`generic-agentic-workflows` reference.
+* a standalone fixture constructed from the Markdown source corpus in the
+	OpenCode `generic-agentic-workflows` reference.
 
 Both scenarios migrate and build the documentation, run bounded configuration
-fuzz cases, evaluate recovery usability, and restore the starting state. The
-agent writes the concise result to `agentic-test-report.md`.
+fuzz cases, evaluate recovery usability, and clean up their disposable
+`.agentic-work/` directories. Missing Sphinx project files in a source corpus
+are expected: the agent creates minimal test-owned Stack configuration,
+navigation, dependencies, and build scaffolding without modifying the original
+sources or reference cache. The agent writes the concise result to
+`agentic-test-report.md`.
 
 To run these actions you need the following:
 

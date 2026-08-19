@@ -31,7 +31,7 @@
     "generic-agentic-workflows": {
       "repository": "SecondSkoll/generic-agentic-workflows",
       "branch": "test/docs",
-      "description": "Read-only real-world documentation fixture. Record the resolved commit and use its documentation to repeat adoption and upgrade testing."
+      "description": "Read-only Markdown documentation source corpus. Record its resolved commit, copy relevant documentation and assets into a disposable in-repository scenario directory, and create test-owned standalone Sphinx Stack scaffolding around that copy. Never edit the reference directory or cache."
     }
   }
 }

@@ -7,13 +7,15 @@ temperature: 0.1
 permission:
   edit: allow
   bash:
-    "make html": allow
-    "make -C docs html": allow
-    "*": deny
+    "*": allow
+    "sudo *": deny
+    "git commit*": deny
+    "git push*": deny
+    "git tag*": deny
+    "git remote*": deny
   read: allow
   web: allow
   skill:
-    sphinx-stack-guardrails: allow
     sphinx-stack-release-selection: allow
     sphinx-stack-migration-validation: allow
     sphinx-stack-build-fuzzing: allow
@@ -34,3 +36,8 @@ You will always:
 * Be mindful of the difficulty of tasks you are assigned.
 * Identify where improvements can be made to lower the difficulty of specific actions.
 * Be concise and critical, while remaining polite.
+* Treat original repository sources and configured references as read-only inputs.
+* Create, install, build, mutate, and remove test fixtures only under `.agentic-work/`.
+* Use scenario-local virtual environments; never install test dependencies with `sudo` or into system Python.
+* Never commit, push, tag, change Git remotes, or edit a configured reference cache.
+* Write outside `.agentic-work/` only when producing `agentic-test-report.md`.

@@ -10,10 +10,22 @@ actions:
   opencode: |
     opencode "$@"
   adoption-test: |
-    sudo apt update && sudo apt install -y make python3.12-venv
+    set -euo pipefail
+    sudo apt update
+    sudo apt install -y make git rsync python3.12-venv
+    rm -rf .agentic-work
     rm -f agentic-test-report.md
-    opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-adoption.md
+    status=0
+    opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-adoption.md || status=$?
+    rm -rf .agentic-work
+    exit "$status"
   upgrade-test: |
-    sudo apt update && sudo apt install -y make python3.12-venv
+    set -euo pipefail
+    sudo apt update
+    sudo apt install -y make git rsync python3.12-venv
+    rm -rf .agentic-work
     rm -f agentic-test-report.md
-    opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-upgrade.md
+    status=0
+    opencode run "Follow the attached prompt" --agent sphinx-stack-agent --file .opencode/prompts/sphinx-stack-upgrade.md || status=$?
+    rm -rf .agentic-work
+    exit "$status"

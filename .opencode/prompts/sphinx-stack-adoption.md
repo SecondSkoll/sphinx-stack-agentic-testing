@@ -27,30 +27,59 @@ Run both scenarios independently against the same selected Stack release:
 | ID | Input | Coverage |
 |---|---|---|
 | `local-rst` | This repository's original `source/` documentation and root build configuration | Standalone reStructuredText site |
-| `reference-generic-agentic-workflows` | The documentation fixture exposed by the OpenCode `generic-agentic-workflows` reference | Real-world embedded documentation, including its original syntax, navigation, assets, and surrounding constraints |
+| `reference-generic-agentic-workflows` | Markdown documentation and related assets exposed by the OpenCode `generic-agentic-workflows` reference | Standalone Sphinx Stack fixture generated from a real-world Markdown source corpus |
 
-Treat the reference as read-only. Record its resolved commit and relevant
-documentation root. Reproduce its documentation fixture in this ephemeral
-repository for migration without editing the reference cache or unrelated
-application files. If the reference cannot be resolved or does not contain a
-coherent pre-Stack fixture, mark that scenario `blocked` with evidence; do not
-replace it with invented content.
+Treat the configured reference directory and cache as read-only. Record its
+resolved commit and identify the relevant Markdown documentation and assets. A
+reference is valid input even when it has no Sphinx configuration, Makefile,
+dependency declaration, or explicit Sphinx navigation.
+
+Copy the relevant source corpus into the reference scenario directory while
+preserving its relative layout and source content. Create clearly test-owned
+standalone Sphinx and Sphinx Stack scaffolding around it, including the
+configuration, build entry point, dependencies, source mapping, Markdown
+parser, and navigation adapter needed for a coherent build. A generated index
+or toctree must be derived deterministically from the copied files.
+
+Generating fixture scaffolding and release-required support files is not
+inventing documentation. Do not replace, rewrite, or fabricate the referenced
+content. Adapt embedding-specific links or navigation only when required for a
+standalone build, keep changes minimal, and record the delta. Mark this
+scenario `blocked` only if the reference cannot be resolved, has no usable
+documentation source, or cannot build after bounded fixture-local adaptation.
+The absence of an existing Sphinx project is not a blocker.
+
+## Fixture workspace
+
+Perform both scenarios in disposable, independent directories:
+
+- `.agentic-work/local-rst/`
+- `.agentic-work/reference-generic-agentic-workflows/`
+
+Treat this repository's original `source/`, root `Makefile`, and configured
+reference paths as read-only inputs. Copy the local source and build files into
+the local scenario before testing. Other than `agentic-test-report.md`, do not
+write outside `.agentic-work/`. Install dependencies only in scenario-local
+virtual environments. Never commit, push, tag, mutate a Git remote, or edit a
+reference cache.
 
 ## Workflow per scenario
 
 1. Select the latest stable published release and record the release-selection
    evidence once, before either scenario. If no stable release is unambiguous,
    explain the ambiguity and use the most defensible published version.
-2. Capture the scenario's clean starting state and pre-migration build evidence
-   where its original build entry point is available.
+2. Create the scenario from its read-only inputs. Capture pre-migration build
+   evidence where an original build entry point exists; for a Markdown-only
+   source corpus, record that no original Sphinx build was defined and proceed
+   to construct the standalone fixture.
 3. Apply the inspection, preservation, minimal-migration, evidence-log, build
    validation, guardrail, and product-experience procedures from
    `sphinx-stack-migration-validation`.
 4. After a successful adopted build, run all bounded cases from
    `sphinx-stack-build-fuzzing`. Restore and confirm the clean adopted build
    after every case.
-5. Record the scenario result, then restore the repository to its clean
-   pre-test state before starting the next scenario. Never commit or push.
+5. Record the scenario result, remove its complete disposable directory, and
+   verify original inputs remain unchanged before starting the next scenario.
 
 After both scenarios, verify that only `agentic-test-report.md` may remain as a
 test result. If restoration cannot be verified with available tools, say so
