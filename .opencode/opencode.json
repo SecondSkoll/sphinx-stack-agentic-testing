@@ -26,5 +26,10 @@
         }
       }
     }
+  },
+  "references": {
+    "generic-agentic-workflows": "secondskoll/generic-agentic-workflows",
+    "branch": "test/docs",
+    "description": "A test repository with documentation not using the Sphinx Stack, to test adoption."
   }
 }

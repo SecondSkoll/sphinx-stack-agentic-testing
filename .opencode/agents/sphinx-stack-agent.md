@@ -11,8 +11,10 @@ permission:
     "*": deny
   read: allow
   web: allow
-skill:
-  sphinx-stack-guardrails: allow
+  skill:
+    sphinx-stack-guardrails: allow
+    sphinx-stack-release-selection: allow
+    sphinx-stack-migration-validation: allow
 ---
 
 # Sphinx Stack agent
